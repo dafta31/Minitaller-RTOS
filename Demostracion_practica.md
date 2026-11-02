@@ -1,315 +1,299 @@
-# 🚀 Demostración Práctica Interactiva: El Desastre del Mars Pathfinder en FreeRTOS
+### Práctica guiada: ejecutar el demo Posix_GCC de FreeRTOS (BLINKY_DEMO)
+**Duración:**  15 a 20 minutos  **Modalidad:**  demostración a cargo del presentador, frente a la clase  **Qué van a hacer:**  descargar el repositorio oficial de FreeRTOS con sus submódulos, compilar el demo del simulador POSIX y ejecutar el demo  **BLINKY_DEMO** . Al final, cargan el mismo concepto de tarea de parpadeo en un Arduino Mega 2560.
 
-**Duración Estimada**: 15 Minutos  
-**Enfoque**: Inversión de Prioridades, Herencia de Prioridad y Planificación Preventiva  
-**Plataforma**: Simulación QEMU (ARM Cortex-M4) sobre Ubuntu / WSL2 (100% sin hardware físico)  
+--------------------------------------------------------------------------------
 
----
+#### Cómo usar nano
+*  Ctrl+W busca texto. Escriban el texto en la línea Buscar: de abajo y presionen Enter.
+*  Las flechas mueven el cursor. Backspace borra el carácter a la izquierda.
+*  Ctrl+O y luego Enter guardan el archivo.
+*  Ctrl+X sale de nano.
 
-## 📋 1. Ficha Técnica y Planteamiento del Problema
+--------------------------------------------------------------------------------
 
-### 🎯 Objetivo Pedagógico
-Comprender el comportamiento determinista del planificador de **FreeRTOS** observando mediante la terminal cómo se genera una **Inversión de Prioridad** (*Priority Inversion*) al usar un **Semáforo Binario**, y cómo el uso de un **Mutex** resuelve este cuello de botella aplicando el protocolo de **Herencia de Prioridad** (*Priority Inheritance*).
-
-### 🪐 El Caso Histórico: Mars Pathfinder (1997)
-En la misión a Marte de 1997, la nave espacial *Mars Pathfinder* experimentaba reinicios periódicos del sistema. El motivo: una tarea de alta prioridad (recolección de información de bus de datos) quedaba bloqueada por una tarea de baja prioridad que tenía tomado un recurso compartido. Una tarea de prioridad intermedia (procesamiento de información climatológica) no dejaba ejecutar a la tarea baja para que liberara el recurso.
-
----
-
-## 🛠️ 2. Preparación Inicial del Entorno
-
-Asegúrese de estar en la raíz de su espacio de trabajo en la terminal de Ubuntu / WSL2 y cree la estructura básica si no existe:
-
+#### Paso 1: Instalar las herramientas
 ```bash
-# Crear estructura de trabajo e ingresar al directorio
-mkdir -p ~/Taller-RTOS/src ~/Taller-RTOS/build ~/Taller-RTOS/config
-cd ~/Taller-RTOS
+sudo apt-get update
+sudo apt-get install -y build-essential git nano
+
 ```
+**Verificación:**  los paquetes se instalan sin errores.
 
----
+--------------------------------------------------------------------------------
 
-## 🧪 Paso 1: Recreando la Falla — Inversión de Prioridades (Semáforo Binario)
-
-En este primer paso, configuramos las tres tareas utilizando un **Semáforo Binario** (`xSemaphoreCreateBinary()`) como mecanismo de sincronización sobre un recurso compartido.
-
-### 💻 Comando 1: Crear el código fuente inicial (`src/main.cpp`)
-
-Ejecute el siguiente comando en la terminal para escribir el código con la **Opción A (Semáforo Binario)** activada:
-
+#### Paso 2: Clonar el repositorio oficial con submódulos
+El repositorio pesa entre 150 y 300 MB, así que puede tardar varios minutos.
 ```bash
-cat << 'EOF' > src/main.cpp
-#include "FreeRTOS.h"
-#include "task.h"
-#include "semphr.h"
-#include <stdio.h>
+cd ~
+git clone https://github.com/FreeRTOS/FreeRTOS.git --recurse-submodules
 
-SemaphoreHandle_t xRecursoCompartido;
-
-// Tarea de Baja Prioridad (Prioridad 1)
-void vTareaBaja(void *pvParameters) {
-    for (;;) {
-        if (xSemaphoreTake(xRecursoCompartido, portMAX_DELAY) == pdTRUE) {
-            printf("[BAJA]  Obtuvo el recurso compartido (Semáforo).
-");
-            
-            // Simula procesamiento prolongado con el recurso retenido
-            vTaskDelay(pdMS_TO_TICKS(100)); 
-            
-            printf("[BAJA]  Liberando el recurso compartido.
-");
-            xSemaphoreGive(xRecursoCompartido);
-        }
-        vTaskDelay(pdMS_TO_TICKS(500));
-    }
-}
-
-// Tarea de Media Prioridad (Prioridad 2 - No usa el recurso)
-void vTareaMedia(void *pvParameters) {
-    vTaskDelay(pdMS_TO_TICKS(10)); // Breve retardo para permitir que TareaBaja inicie primero
-    for (;;) {
-        printf("[MEDIA] Tarea Media ejecutando procesamiento intensivo en CPU...
-");
-        vTaskDelay(pdMS_TO_TICKS(50));
-    }
-}
-
-// Tarea de Alta Prioridad (Prioridad 3 - Tarea Crítica)
-void vTareaAlta(void *pvParameters) {
-    vTaskDelay(pdMS_TO_TICKS(20)); // Se activa cuando TareaBaja ya posee el recurso
-    for (;;) {
-        printf("[ALTA]  ¡ALERTA! Tarea Alta solicita el recurso...
-");
-        if (xSemaphoreTake(xRecursoCompartido, portMAX_DELAY) == pdTRUE) {
-            printf("[ALTA]  ¡Recurso obtenido! Atendiendo evento crítico a tiempo.
-");
-            xSemaphoreGive(xRecursoCompartido);
-        }
-        vTaskDelay(pdMS_TO_TICKS(400));
-    }
-}
-
-int main(void) {
-    // OPCIÓN A: Semáforo Binario (Sin herencia de prioridad)
-    xRecursoCompartido = xSemaphoreCreateBinary();
-    xSemaphoreGive(xRecursoCompartido);
-
-    if (xRecursoCompartido != NULL) {
-        xTaskCreate(vTareaBaja,  "TareaBaja",  1024, NULL, 1, NULL);
-        xTaskCreate(vTareaMedia, "TareaMedia", 1024, NULL, 2, NULL);
-        xTaskCreate(vTareaAlta,  "TareaAlta",  1024, NULL, 3, NULL);
-
-        vTaskStartScheduler();
-    }
-    while (1);
-}
-EOF
 ```
-
-### 🔨 Comando 2: Compilar y ejecutar en el emulador QEMU
-
+**Verificación:**  la carpeta de la demo existe:
 ```bash
-cd ~/Taller-RTOS/build
-cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
-ninja
-qemu-system-arm -M netduinoplus2 -cpu cortex-m4 -nographic -kernel stm32h7_edgeai.elf
+ls ~/FreeRTOS/FreeRTOS/Demo/Posix_GCC
+
 ```
+Deben aparecer los archivos fuente y el Makefile.
 
-### 📺 Salida Observada en la Terminal (Semáforo Binario)
+--------------------------------------------------------------------------------
 
-```text
-[BAJA]  Obtuvo el recurso compartido (Semáforo).
-[ALTA]  ¡ALERTA! Tarea Alta solicita el recurso...
-[MEDIA] Tarea Media ejecutando procesamiento intensivo en CPU...
-[MEDIA] Tarea Media ejecutando procesamiento intensivo en CPU...
-[MEDIA] Tarea Media ejecutando procesamiento intensivo en CPU...
-[BAJA]  Liberando el recurso compartido.
-[ALTA]  ¡Recurso obtenido! Atendiendo evento crítico a tiempo.
-```
-
-### 🔍 Análisis Didáctico: ¿Qué demuestra esta salida sobre FreeRTOS?
-
-1. **Pérdida del Determinismo Temporal**: La `TareaAlta` (Prioridad 3) debería tener el control prioritario de la CPU. Sin embargo, al solicitar el semáforo en uso por `TareaBaja` (Prioridad 1), entra en estado *Blocked*.
-2. **Inversión de Prioridad**: Cuando `TareaMedia` (Prioridad 2) despierta, desplaza a `TareaBaja` porque `Prioridad 2 > Prioridad 1`. `TareaBaja` no puede continuar ejecutándose y, por lo tanto, no puede liberar el semáforo.
-3. **Efecto Cascada**: La tarea de prioridad media congela indirectamente a la tarea de más alta prioridad del sistema, que ni siquiera requiere interacción con la tarea media.
-
----
-
-## 🛡️ Paso 2: Aplicando la Solución — Herencia de Prioridades (Mutex)
-
-Modificamos el código reemplazando el Semáforo Binario por un **Mutex** (`xSemaphoreCreateMutex()`).
-
-### 💻 Comando 3: Modificar `src/main.cpp` para usar Mutex
-
-Ejecute la actualización directa en la terminal para activar la **Opción B**:
-
+#### Paso 3: Entrar a la carpeta de la demo
 ```bash
-cat << 'EOF' > ~/Taller-RTOS/src/main.cpp
-#include "FreeRTOS.h"
-#include "task.h"
-#include "semphr.h"
-#include <stdio.h>
+cd ~/FreeRTOS/FreeRTOS/Demo/Posix_GCC
+ls
 
-SemaphoreHandle_t xRecursoCompartido;
-
-void vTareaBaja(void *pvParameters) {
-    for (;;) {
-        if (xSemaphoreTake(xRecursoCompartido, portMAX_DELAY) == pdTRUE) {
-            printf("[BAJA]  Obtuvo el recurso compartido (Mutex).
-");
-            
-            vTaskDelay(pdMS_TO_TICKS(100)); 
-            
-            printf("[BAJA]  Liberando el recurso compartido.
-");
-            xSemaphoreGive(xRecursoCompartido);
-        }
-        vTaskDelay(pdMS_TO_TICKS(500));
-    }
-}
-
-void vTareaMedia(void *pvParameters) {
-    vTaskDelay(pdMS_TO_TICKS(10));
-    for (;;) {
-        printf("[MEDIA] Tarea Media ejecutando procesamiento intensivo en CPU...
-");
-        vTaskDelay(pdMS_TO_TICKS(50));
-    }
-}
-
-void vTareaAlta(void *pvParameters) {
-    vTaskDelay(pdMS_TO_TICKS(20));
-    for (;;) {
-        printf("[ALTA]  ¡ALERTA! Tarea Alta solicita el recurso...
-");
-        if (xSemaphoreTake(xRecursoCompartido, portMAX_DELAY) == pdTRUE) {
-            printf("[ALTA]  ¡Recurso obtenido de inmediato! Atendiendo evento crítico.
-");
-            xSemaphoreGive(xRecursoCompartido);
-        }
-        vTaskDelay(pdMS_TO_TICKS(400));
-    }
-}
-
-int main(void) {
-    // OPCIÓN B: Mutex con Herencia de Prioridades activa
-    xRecursoCompartido = xSemaphoreCreateMutex();
-
-    if (xRecursoCompartido != NULL) {
-        xTaskCreate(vTareaBaja,  "TareaBaja",  1024, NULL, 1, NULL);
-        xTaskCreate(vTareaMedia, "TareaMedia", 1024, NULL, 2, NULL);
-        xTaskCreate(vTareaAlta,  "TareaAlta",  1024, NULL, 3, NULL);
-
-        vTaskStartScheduler();
-    }
-    while (1);
-}
-EOF
 ```
-
-### 🔨 Comando 4: Recompilar y simular en QEMU
-
+**Verificación:**  aparecen Makefile y main.c.
+Guarden una copia del main.c original, para poder volver a él al final de la práctica:
 ```bash
-cd ~/Taller-RTOS/build
-ninja
-qemu-system-arm -M netduinoplus2 -cpu cortex-m4 -nographic -kernel stm32h7_edgeai.elf
+cp main.c ~/main_original.c
+
 ```
 
-### 📺 Salida Observada en la Terminal (Mutex con Herencia de Prioridad)
+--------------------------------------------------------------------------------
 
-```text
-[BAJA]  Obtuvo el recurso compartido (Mutex).
-[ALTA]  ¡ALERTA! Tarea Alta solicita el recurso...
-[BAJA]  Liberando el recurso compartido.
-[ALTA]  ¡Recurso obtenido de inmediato! Atendiendo evento crítico.
-[MEDIA] Tarea Media ejecutando procesamiento intensivo en CPU...
-```
-
-### 🔍 Análisis Didáctico: ¿Qué demuestra esta salida sobre FreeRTOS?
-
-1. **Activación de Herencia de Prioridades (*Priority Inheritance*)**: En el instante exacto en que `TareaAlta` (Prioridad 3) solicita el Mutex retenido por `TareaBaja` (Prioridad 1), el Kernel de FreeRTOS eleva temporalmente la prioridad efectiva de `TareaBaja` a **Prioridad 3**.
-2. **Bloqueo de la Tarea Intermedia**: Debido a que `TareaBaja` ahora actúa temporalmente con Prioridad 3, la `TareaMedia` (Prioridad 2) ya **no puede desplazarla de la CPU**.
-3. **Restauración y Respuesta Inmediata**: `TareaBaja` completa rápidamente su trabajo con el recurso, lo libera, e inmediatamente el Kernel le devuelve su Prioridad 1 original y le entrega el Mutex a `TareaAlta`, garantizando el cumplimiento de plazos estrictos de tiempo real.
-
----
-
-## ⚡ Paso 3: Experimento Avanzado — Cambio Dinámico de Prioridades (`vTaskPrioritySet`)
-
-En este experimento adicional, observaremos cómo el planificador preventivo (*Preemptive Scheduler*) de FreeRTOS reacciona instantáneamente cuando modificamos dinámicamente la prioridad de una tarea en tiempo de ejecución.
-
-### 💻 Comando 5: Modificar `src/main.cpp` con ajuste dinámico de prioridad
-
+#### Paso 4: Revisar la selección del demo en main.c
+Antes de editar, revisen qué valor tiene la configuración por defecto:
 ```bash
-cat << 'EOF' > ~/Taller-RTOS/src/main.cpp
-#include "FreeRTOS.h"
-#include "task.h"
-#include <stdio.h>
+sed -n '74,92p' main.c
 
-TaskHandle_t xTaskBajaHandle = NULL;
-
-void vTareaBaja(void *pvParameters) {
-    for (;;) {
-        printf("[BAJA]  Ejecutando con Prioridad Básica (1)...
-");
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-}
-
-void vTareaControladora(void *pvParameters) {
-    vTaskDelay(pdMS_TO_TICKS(50));
-    printf("
-[CONTROL] Elevando dinámicamente la prioridad de TareaBaja a 4...
-");
-    
-    // Cambiar prioridad de TareaBaja de 1 a 4
-    vTaskPrioritySet(xTaskBajaHandle, 4);
-    
-    printf("[CONTROL] Prioridad cambiada con éxito.
-
-");
-    vTaskDelay(pdMS_TO_TICKS(200));
-}
-
-int main(void) {
-    xTaskCreate(vTareaBaja, "TareaBaja", 1024, NULL, 1, &xTaskBajaHandle);
-    xTaskCreate(vTareaControladora, "Control", 1024, NULL, 2, NULL);
-
-    vTaskStartScheduler();
-    while (1);
-}
-EOF
 ```
+Deben ver estas líneas:
+```c
+#endif
 
-### 🔨 Comando 6: Recompilar y ejecutar
+#define    BLINKY_DEMO    0
+#define    FULL_DEMO      1
 
+#ifdef BUILD_DIR
+    #define BUILD         BUILD_DIR
+#else
+    #define BUILD         "./"
+#endif
+
+/* Demo type is passed as an argument */
+#ifdef USER_DEMO
+    #define     mainSELECTED_APPLICATION    USER_DEMO
+#else /* Default Setting */
+    #define    mainSELECTED_APPLICATION     FULL_DEMO
+#endif
+
+/* This demo uses heap_3.c (the libc provided malloc() and free()). */
+
+```
+BLINKY_DEMO vale 0 y FULL_DEMO vale 1. La línea que decide el demo es la del bloque #else.
+En la versión que revisamos, el bloque #else dice FULL_DEMO. Para ejecutar BlinkyDemo,  **hagan el Paso 5**  y cambien el valor a BLINKY_DEMO.
+**Verificación:**  anoten el valor que aparece en el bloque #else.
+
+--------------------------------------------------------------------------------
+
+#### Paso 5: Dejar BLINKY_DEMO por defecto
+Hagan este paso si el bloque #else dice FULL_DEMO, como en la versión que revisamos.
 ```bash
-cd ~/Taller-RTOS/build
-ninja
-qemu-system-arm -M netduinoplus2 -cpu cortex-m4 -nographic -kernel stm32h7_edgeai.elf
+nano main.c
+
+```
+Dentro de nano:
+1. Presionen Ctrl+W, escriban Default Setting y presionen Enter. El cursor queda en la línea #else /* Default Setting */. Presionen la flecha abajo una vez para bajar a la línea #define    mainSELECTED_APPLICATION     FULL_DEMO.
+2. Cambien FULL_DEMO por BLINKY_DEMO.
+La línea debe quedar así:
+```c
+    #define    mainSELECTED_APPLICATION     BLINKY_DEMO
+
+```
+3. Presionen Ctrl+O, Enter y Ctrl+X.
+**Verificación:**
+```bash
+sed -n '74,92p' main.c
+
+```
+La línea del bloque #else debe mostrar BLINKY_DEMO.
+
+--------------------------------------------------------------------------------
+
+#### Paso 6: Compilar el demo BLINKY_DEMO
+```bash
+cd ~/FreeRTOS/FreeRTOS/Demo/Posix_GCC
+make clean
+make
+
+```
+**Verificación:**  la compilación termina sin errores y se crea la carpeta build. Revisen que el ejecutable exista:
+```bash
+ls build
+
+```
+Si make falla, copien el mensaje de error completo antes de seguir.
+
+--------------------------------------------------------------------------------
+
+#### Paso 7: Ejecutar BLINKY_DEMO
+```bash
+cd build
+./posix_demo
+
+```
+**Verificación:**  aparecen estas líneas al inicio:
+```
+Trace started.
+Starting echo blinky demo
+
+```
+Después aparecen mensajes continuos Message received from task y Message received from software timer.
+Para detenerlo presionen Ctrl+C.
+Después de detenerlo, regresen a la carpeta del demo:
+```bash
+cd ~/FreeRTOS/FreeRTOS/Demo/Posix_GCC
+
 ```
 
-### 📺 Salida Observada en la Terminal
+--------------------------------------------------------------------------------
 
-```text
-[BAJA]  Ejecutando con Prioridad Básica (1)...
+#### Paso 8: Restaurar el archivo original
+```bash
+cd ~/FreeRTOS/FreeRTOS/Demo/Posix_GCC
+cp ~/main_original.c main.c
+make clean
+make
 
-[CONTROL] Elevando dinámicamente la prioridad de TareaBaja a 4...
-[BAJA]  Ejecutando con Prioridad Básica (1)...
-[CONTROL] Prioridad cambiada con éxito.
 ```
 
-### 🔍 Análisis Didáctico: ¿Qué demuestra esta salida sobre FreeRTOS?
+--------------------------------------------------------------------------------
 
-1. **Conmutación Inmediata por Excepción `PendSV`**: Al llamar a `vTaskPrioritySet(xTaskBajaHandle, 4)`, el Kernel evalúa si la tarea modificada tiene ahora mayor prioridad que la tarea actual (`Control`, Prioridad 2).
-2. **Comportamiento Preventivo**: Al convertirse `TareaBaja` en la tarea de mayor prioridad lista para ejecutar (Prioridad 4), el Kernel interrumpe de inmediato a la tarea `Control` y conmuta el contexto hacia `TareaBaja` antes de permitir que `Control` continúe la impresión de su siguiente mensaje.
+#### Paso 9: Demostración en Arduino Mega 2560
+**Materiales:**  Arduino Mega 2560, cable USB, un LED, una resistencia de 220 Ω, protoboard y dos cables.
+##### 9.1 Descargar e instalar Arduino IDE desde la terminal
+Descarguen el AppImage del Arduino IDE 2.3.10 a la carpeta Downloads:
+```bash
+cd ~/Downloads
+wget https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.10_Linux_64bit.AppImage
 
----
+```
+**Si wget no está instalado**  (aparece wget: command not found), tienen dos opciones:
+*  Instalarlo y repetir la descarga:
+```bash
+sudo apt-get install -y wget
+wget https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.10_Linux_64bit.AppImage
 
-## 📊 4. Resumen Comparativo de Mecanismos en FreeRTOS
+```
+*  O usar curl, que normalmente ya viene instalado en Ubuntu:
+```bash
+curl -L -O https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.10_Linux_64bit.AppImage
 
-| Característica | Semáforo Binario (`xSemaphoreCreateBinary`) | Mutex (`xSemaphoreCreateMutex`) |
-| :--- | :--- | :--- |
-| **Uso Principal** | Sincronización de eventos (ISRs a Tareas) | Exclusión mutua de recursos compartidos |
-| **Herencia de Prioridad** | ❌ No disponible | ✅ Habilitada automáticamente |
-| **Propietario (*Ownership*)** | Ninguno (Cualquier tarea/ISR puede darlo) | Poseído por la tarea que lo tomó |
-| **Uso en ISRs** | ✅ `xSemaphoreGiveFromISR()` | ❌ Prohibido dentro de ISRs |
-| **Prevención de Inversión** | ❌ Sufre de Inversión de Prioridad | ✅ Previene la Inversión de Prioridad |
+```
+**Si la descarga responde con error (por ejemplo 404),**  la dirección cambió. Descarguen el AppImage Linux 64 bits desde arduino.cc/en/software y guárdenlo en ~/Downloads.
+Verifiquen que el archivo existe:
+```bash
+ls -lh ~/Downloads/arduino-ide*
+
+```
+Den permiso de ejecución al archivo:
+```bash
+chmod +x arduino-ide_2.3.10_Linux_64bit.AppImage
+
+```
+Abran el IDE con --no-sandbox:
+```bash
+./arduino-ide_2.3.10_Linux_64bit.AppImage --no-sandbox
+
+```
+La opción --no-sandbox desactiva el aislamiento de seguridad de Electron. Es necesaria en algunas versiones de Ubuntu para que el IDE abra desde un AppImage. Úsenla solo con este archivo descargado desde el sitio oficial de Arduino.
+**Verificación:**  se abre la ventana del Arduino IDE sin errores.
+##### 9.2 Instalar la biblioteca de FreeRTOS para Arduino
+En el IDE: Herramientas → Administrar bibliotecas. Busquen FreeRTOS, elijan la biblioteca que incluye Arduino_FreeRTOS.h y presionen Instalar.
+**Verificación:**  en una terminal:
+```bash
+find ~/Arduino -name "Arduino_FreeRTOS.h" 2>/dev/null
+
+```
+Debe aparecer una ruta. Si no aparece, instalen la biblioteca desde el Administrador de bibliotecas y repitan la búsqueda.
+##### 9.3 Conectar el LED
+Conecten el pin 22 del Arduino a una resistencia de 220 Ω. La otra punta de la resistencia va a la pata larga del LED (ánodo). La pata corta (cátodo) va a GND.
+**Verificación:**  la conexión está en la protoboard y el LED está en el sentido correcto (pata larga hacia la resistencia).
+##### 9.4 Seleccionar placa y puerto
+Conecten el Arduino por USB y en el IDE elijan:
+*  Herramientas → Placa → Arduino Mega or Mega 2560
+*  Herramientas → Puerto → el puerto que aparezca, por ejemplo /dev/ttyACM0
+Si no aparece ningún puerto, ejecuten en la terminal:
+```bash
+ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null
+
+```
+Si aparece un puerto pero el IDE no puede subir el código, agreguen su usuario al grupo dialout, cierren sesión y vuelvan a entrar:
+```bash
+sudo usermod -aG dialout $USER
+
+```
+##### 9.5 Escribir el código
+En el IDE, Archivo → Nuevo, y peguen este código completo:
+```cpp
+#include <Arduino_FreeRTOS.h>
+
+// Define the LED pin (you can change this to 2, 22, 24, etc.)
+const int ledPin = 22;
+
+// Declare the task function prototype
+void TaskBlink(void *pvParameters);
+
+void setup() {
+  // Set the LED digital pin as an output
+  pinMode(ledPin, OUTPUT);
+
+  // Create the FreeRTOS task
+  xTaskCreate(
+    TaskBlink,    // Task function
+    "BlinkTask",  // Descriptive task name (for debugging)
+    256,          // Stack size in words
+    NULL,         // Task input parameter
+    1,            // Priority (1 is low priority)
+    NULL          // Task handle
+  );
+
+  // Note: On AVR-based Arduino boards like the Mega, the feilipu
+  // FreeRTOS library automatically starts the scheduler when setup() finishes.
+  // Therefore, loop() remains empty.
+}
+
+void loop() {
+  // The FreeRTOS scheduler handles all task execution.
+  // Leaving loop() empty prevents blocking the scheduler.
+}
+
+/*--------------------------------------------------*/
+/* Task Implementation                              */
+/*--------------------------------------------------*/
+void TaskBlink(void *pvParameters) {
+  (void) pvParameters; // Unused parameter
+
+  for (;;) {
+    digitalWrite(ledPin, HIGH);           // Turn the LED on
+    vTaskDelay(500 / portTICK_PERIOD_MS); // Block task for 500ms (non-blocking for OS)
+
+    digitalWrite(ledPin, LOW);            // Turn the LED off
+    vTaskDelay(500 / portTICK_PERIOD_MS); // Block task for 500ms
+  }
+}
+
+```
+Guarden el archivo con Ctrl+S. El IDE les pedirá un nombre: escriban BlinkTask.
+##### 9.6 Verificar y subir el código
+1. Presionen el botón ✓ (Verificar). Esperen el mensaje de compilación sin errores.
+2. Presionen el botón → (Subir). Esperen el mensaje de carga finalizada.
+**Verificación:**  en la parte inferior del IDE aparece Subida completa o un mensaje equivalente, sin errores.
+##### 9.7 Observar el parpadeo
+El LED se enciende 500 ms y se apaga 500 ms, de forma continua. Es la tarea BlinkTask corriendo bajo el planificador de FreeRTOS.
+**Preguntas para la clase:**
+1. ¿Qué pasaría con el parpadeo si vTaskDelay tuviera 1000 en lugar de 500?
+2. ¿Por qué loop() queda vacío?
+
+--------------------------------------------------------------------------------
+
+#### Preguntas de cierre
+1. ¿Qué constante de main.c decide qué demo se ejecuta?
+2. ¿Por qué hay que ejecutar make clean antes de make cada vez que cambian la selección del demo?
+3. ¿Qué mensajes aparecen al inicio del demo y qué significa Starting echo blinky demo?
+
+--------------------------------------------------------------------------------
+
+#### Recurso de estudio
+Cuaderno del taller: [Sistemas operativos de tiempo real para sistemas embebidos: el caso FreeRTOS](https://gemini.google.com/notebook/14fd2157-5944-4d94-86c5-171664dad0ea)
