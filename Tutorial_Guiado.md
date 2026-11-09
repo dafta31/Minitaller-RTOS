@@ -392,7 +392,7 @@ Dejen correr la simulación hasta el tick 10 y comparen.
 
 **¿Qué deben observar?**
 * `vControlTask` tiene la mayor prioridad de la aplicación (3), así que en sus ticks de activación no debe aparecer `░░`.
-* `vKeyHandlerTask` sí muestra `░░` cuando una pulsación debe esperar su turno. En el tick 7 llegan dos pulsaciones seguidas: la segunda espera hasta que termine la primera.
+* `vKeyHandlerTask` sí muestra `░░` porque debe esperar su turno. En el tick 7 llegan dos pulsaciones seguidas: la segunda espera hasta que termine la primera.
 
 **Checkpoint:** Aparecen las cuatro filas (tres tareas e `IdleTask`), la fila de eventos y el estado de cada tarea en el tick actual.
 
