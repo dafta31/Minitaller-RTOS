@@ -153,7 +153,7 @@ make
 --------------------------------------------------------------------------------
 
 #### Paso 9: Demostración en Arduino Mega 2560
-**Materiales:**  Arduino Mega 2560, cable USB, un LED, una resistencia de 220 Ω, protoboard y dos cables.
+**Materiales:**  Arduino Mega 2560, cable USB, un LED, una resistencia de 330 Ω, protoboard y dos cables.
 ##### 9.1 Descargar e instalar Arduino IDE desde la terminal
 Descarguen el AppImage del Arduino IDE 2.3.10 a la carpeta Downloads:
 ```bash
