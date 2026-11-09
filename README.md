@@ -44,7 +44,7 @@ Para la demostración se necesita además:
 
 ---
 
-## 4. Cómo usar los materiales
+## 4. ¿Cómo usar los materiales?
 
 1. Descarguen o clonen este repositorio.
 2. Abran el tutorial guiado y sigan los pasos en orden. Cada paso que compila muestra el comando completo de `gcc`.
