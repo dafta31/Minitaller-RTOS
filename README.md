@@ -4,7 +4,7 @@ Taller para estudiantes de Ingeniería en Electrónica (ITCR). Enseña cómo un 
 
 ---
 
-## 1. Qué incluye el repositorio
+## 1. ¿Qué incluye el repositorio?
 
 El repositorio contiene dos materiales en Markdown:
 
