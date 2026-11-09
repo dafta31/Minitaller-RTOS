@@ -3,14 +3,6 @@
 
 --------------------------------------------------------------------------------
 
-#### ¿Cómo usar nano?
-*  Ctrl+W busca texto. Escriban el texto en la línea Buscar: de abajo y presionen Enter.
-*  Las flechas mueven el cursor. Backspace borra el carácter a la izquierda.
-*  Ctrl+O y luego Enter guardan el archivo.
-*  Ctrl+X sale de nano.
-
---------------------------------------------------------------------------------
-
 #### Paso 1: Instalar las herramientas
 ```bash
 sudo apt-get update
