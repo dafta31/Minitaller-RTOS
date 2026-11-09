@@ -1,4 +1,4 @@
-### Práctica guiada: ejecutar el demo Posix_GCC de FreeRTOS (BLINKY_DEMO)
+### Práctica guiada: ejecutar el demo Posix_GCC de FreeRTOS
 **Duración:**  15 a 20 minutos  **¿Qué se va a realizar?:**  descargar el repositorio oficial de FreeRTOS con sus submódulos, compilar el demo del simulador POSIX y ejecutar el demo  **BLINKY_DEMO** . Finalmente, se carga un script de FreeRTOS en el arduino que parpadea un LED.
 
 --------------------------------------------------------------------------------
