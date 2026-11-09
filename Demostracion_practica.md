@@ -1,5 +1,5 @@
 ### Práctica guiada: ejecutar el demo Posix_GCC de FreeRTOS (BLINKY_DEMO)
-**Duración:**  15 a 20 minutos  **Modalidad:**  demostración a cargo del presentador, frente a la clase  **Qué van a hacer:**  descargar el repositorio oficial de FreeRTOS con sus submódulos, compilar el demo del simulador POSIX y ejecutar el demo  **BLINKY_DEMO** . Al final, cargan el mismo concepto de tarea de parpadeo en un Arduino Mega 2560.
+**Duración:**  15 a 20 minutos  **¿Qué se va a realizar?:**  descargar el repositorio oficial de FreeRTOS con sus submódulos, compilar el demo del simulador POSIX y ejecutar el demo  **BLINKY_DEMO** . Finalmente, se carga un script de FreeRTOS en el arduino que parpadea un LED.
 
 --------------------------------------------------------------------------------
 
