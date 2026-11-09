@@ -288,4 +288,4 @@ El LED se enciende 500 ms y se apaga 500 ms, de forma continua. Es la tarea Blin
 --------------------------------------------------------------------------------
 
 #### Recurso de estudio
-Cuaderno del taller: [Sistemas operativos de tiempo real para sistemas embebidos: el caso FreeRTOS](https://gemini.google.com/notebook/14fd2157-5944-4d94-86c5-171664dad0ea)
+Cuaderno del minitaller: [Sistemas operativos de tiempo real para sistemas embebidos: el caso FreeRTOS](https://gemini.google.com/notebook/14fd2157-5944-4d94-86c5-171664dad0ea)
