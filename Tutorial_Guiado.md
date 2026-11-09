@@ -58,7 +58,7 @@ Para llevar a cabo este tutorial guiado no se requiere hardware embebido físico
 
 ---
 
-## 🛠️ Paso a Paso del Laboratorio
+## 🛠️ 4. Paso a Paso del Laboratorio
 
 ### Paso 0: Instalación de Herramientas
 Ejecuten el siguiente comando en la terminal para asegurarse de contar con todos los paquetes necesarios:
