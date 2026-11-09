@@ -423,7 +423,7 @@ gcc -Wall -Wextra -g -pthread -Iconfig -Isrc   -IFreeRTOS-Kernel/include   -IFre
 ./cronograma
 ```
 
-**Qué deben observar:** Ahora `vLogTask` y `vKeyHandlerTask` tienen la misma prioridad (2). Cuando las dos están listas en el mismo tick, la CPU se turna entre ellas tick a tick (*Round-Robin / Time-Slicing*). La tarea que espera su turno muestra `░░`. Anoten en qué ticks ocurre. Presionen `Ctrl+C` para detener.
+**¿Qué deben observar?** Ahora `vLogTask` y `vKeyHandlerTask` tienen la misma prioridad (2). Cuando las dos están listas en el mismo tick, la CPU se turna entre ellas tick a tick (*Round-Robin / Time-Slicing*). La tarea que espera su turno muestra `░░`. Anoten en qué ticks ocurre. Presionen `Ctrl+C` para detener.
 
 ---
 
@@ -480,7 +480,7 @@ gcc -Wall -Wextra -g -pthread -Iconfig -Isrc   -IFreeRTOS-Kernel/include   -IFre
 ```
 
 **Predicción antes de ejecutar:** ¿En qué ticks se activa ahora `vControlTask`?  
-**Qué deben observar:** La activación de `vControlTask` aparece en los ticks 3, 6 y 9. El número `1` de la fila de eventos marca cada activación. Presionen `Ctrl+C` para detener.
+**¿Qué deben observar?** La activación de `vControlTask` aparece en los ticks 3, 6 y 9. El número `1` de la fila de eventos marca cada activación. Presionen `Ctrl+C` para detener.
 
 ---
 
