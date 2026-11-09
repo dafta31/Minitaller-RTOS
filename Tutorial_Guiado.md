@@ -491,7 +491,11 @@ Ahora cambien la prioridad de `vLogTask` de 1 a 4. Antes de compilar, escriban e
 nano src/main.c
 ```
 1. Presionen `Ctrl+W`, busquen `#define PRIO_LOG`, cambien el valor por `4`, guarden y salgan.
-2. Compilen y ejecuten `./cronograma`. Comparen la salida con su predicción.
+2. Compilen y ejecuten. Comparen la salida con su predicción.
+```bash
+gcc -Wall -Wextra -g -pthread -Iconfig -Isrc   -IFreeRTOS-Kernel/include   -IFreeRTOS-Kernel/portable/ThirdParty/GCC/Posix   -IFreeRTOS-Kernel/portable/ThirdParty/GCC/Posix/utils   src/main.c   FreeRTOS-Kernel/tasks.c   FreeRTOS-Kernel/queue.c   FreeRTOS-Kernel/list.c   FreeRTOS-Kernel/portable/ThirdParty/GCC/Posix/port.c   FreeRTOS-Kernel/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c   FreeRTOS-Kernel/portable/MemMang/heap_4.c   -o cronograma
+./cronograma
+```
 
 **Segunda parte del reto:**
 Regresen `PRIO_LOG` a `2` y cambien `PRIO_TECLA` a `1`. En `nano`, usen `Ctrl+W` para ajustar ambas directivas, guarden y salgan.  
