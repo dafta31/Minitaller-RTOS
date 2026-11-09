@@ -3,7 +3,7 @@
 
 --------------------------------------------------------------------------------
 
-#### Cómo usar nano
+#### ¿Cómo usar nano?
 *  Ctrl+W busca texto. Escriban el texto en la línea Buscar: de abajo y presionen Enter.
 *  Las flechas mueven el cursor. Backspace borra el carácter a la izquierda.
 *  Ctrl+O y luego Enter guardan el archivo.
