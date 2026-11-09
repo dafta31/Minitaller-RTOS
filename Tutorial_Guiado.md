@@ -499,7 +499,11 @@ gcc -Wall -Wextra -g -pthread -Iconfig -Isrc   -IFreeRTOS-Kernel/include   -IFre
 
 **Segunda parte del reto:**
 Regresen `PRIO_LOG` a `2` y cambien `PRIO_TECLA` a `1`. En `nano`, usen `Ctrl+W` para ajustar ambas directivas, guarden y salgan.  
-Compilen y ejecuten `./cronograma`. Presionen `Ctrl+C` después de unos ticks y observen la fila de `vKeyHandlerTask`.
+Compilen y ejecuten. Presionen `Ctrl+C` después de unos ticks y observen la fila de `vKeyHandlerTask`.
+```bash
+gcc -Wall -Wextra -g -pthread -Iconfig -Isrc   -IFreeRTOS-Kernel/include   -IFreeRTOS-Kernel/portable/ThirdParty/GCC/Posix   -IFreeRTOS-Kernel/portable/ThirdParty/GCC/Posix/utils   src/main.c   FreeRTOS-Kernel/tasks.c   FreeRTOS-Kernel/queue.c   FreeRTOS-Kernel/list.c   FreeRTOS-Kernel/portable/ThirdParty/GCC/Posix/port.c   FreeRTOS-Kernel/portable/ThirdParty/GCC/Posix/utils/wait_for_event.c   FreeRTOS-Kernel/portable/MemMang/heap_4.c   -o cronograma
+./cronograma
+```
 
 **Pregunta del Reto:** ¿Qué pasa con las pulsaciones de tecla cuando `vKeyHandlerTask` tiene la prioridad más baja de la aplicación?
 
