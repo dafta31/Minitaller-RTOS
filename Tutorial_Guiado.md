@@ -374,7 +374,7 @@ Ejecuten el programa generado:
 ./cronograma
 ```
 
-**Ojo**El programa dibujará el cronograma en pantalla en tiempo real (un tick por segundo). Para detenerlo en cualquier momento, presionen `Ctrl+C`.
+**¡¡Ojo!!** El programa dibujará el cronograma en pantalla en tiempo real (un tick por segundo). Para detenerlo en cualquier momento, presionen `Ctrl+C`.
 
 cronograma muestra tres símbolos por tarea en cada tick (cada segundo):
 
