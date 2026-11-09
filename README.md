@@ -39,7 +39,7 @@ Para el tutorial guiado se necesita acceso a internet para clonar `FreeRTOS-Kern
 Para la demostración se necesita además:
 
 - El repositorio oficial `FreeRTOS/FreeRTOS`, clonado con sus submódulos.
-- Un Arduino Mega 2560, un LED, una resistencia de 220 Ω, una protoboard y cables.
+- Un Arduino Mega 2560, un LED, una resistencia de 330 Ω, una protoboard y cables.
 - El Arduino IDE 2.3.10 (descargable desde la terminal, según el markdown de la práctica).
 
 ---
