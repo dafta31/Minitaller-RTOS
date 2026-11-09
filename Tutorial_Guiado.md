@@ -453,7 +453,7 @@ gcc -Wall -Wextra -g -pthread -Iconfig -Isrc   -IFreeRTOS-Kernel/include   -IFre
 ```
 
 **Predicción antes de ejecutar:** Cada vez que `vControlTask` se activa, ¿cuántos ticks seguidos ocupa la CPU?  
-**Qué deben observar:** En la fila de `vControlTask`, cada activación ocupa dos ticks seguidos con `██`. Presionen `Ctrl+C` para detener.
+**¿Qué deben observar?** En la fila de `vControlTask`, cada activación ocupa dos ticks seguidos con `██`. Presionen `Ctrl+C` para detener.
 
 ---
 
