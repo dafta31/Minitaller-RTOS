@@ -1,6 +1,6 @@
-# 🛠️ Taller Práctico: Sistemas Operativos de Tiempo Real con FreeRTOS
+# 🛠️ Minitaller Práctico: Sistemas Operativos de Tiempo Real con FreeRTOS
 
-Taller para estudiantes de Ingeniería en Electrónica (ITCR). Enseña cómo un planificador por prioridades decide qué tarea tiene la CPU en cada momento, y cómo cambiar la prioridad, la duración y el periodo de las tareas cambia el resultado. Todo se hace en la terminal de Ubuntu, sin necesidad de hardware. La práctica de demostración termina con un Arduino Mega 2560.
+Minitaller para estudiantes de Ingeniería en Electrónica (ITCR). Enseña cómo un planificador por prioridades decide qué tarea tiene la CPU en cada momento, y cómo cambiar la prioridad, la duración y el periodo de las tareas cambia el resultado. Todo se hace en la terminal de Ubuntu, sin necesidad de hardware. La práctica de demostración termina con un Arduino Mega 2560.
 
 ---
 
@@ -16,10 +16,10 @@ El repositorio contiene dos materiales en Markdown:
 ## 2. Estructura del repositorio
 
 ```
-Taller-RTOS/
-├── README.md                                       Esta guía
-├── Tutorial_FreeRTOS_Cronograma_Guiado.md          Tutorial guiado para estudiantes
-└── Practica_Demo_Blinky_y_FULL_DEMO_FreeRTOS.md    Demostración del presentador
+Minitaller-RTOS/
+├── README.md                   Esta guía
+├── Tutorial_Guiado.md          Tutorial guiado para estudiantes
+└── Demostracion_practica.md    Demostración del presentador
 ```
 
 El repositorio no contiene código compilado ni archivos del kernel. Los estudiantes obtienen el kernel desde GitHub durante el tutorial.
