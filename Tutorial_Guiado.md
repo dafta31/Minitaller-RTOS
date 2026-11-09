@@ -376,13 +376,13 @@ Ejecuten el programa generado:
 
 El programa dibujará el cronograma en pantalla en tiempo real (un tick por segundo). Para detenerlo en cualquier momento, presionen `Ctrl+C`.
 
-**Antes de dejarlo correr, digan en voz alta:**
+**Antes de dejarlo correr:**
 * ¿En qué ticks debería activarse `vControlTask`? (Número `1` en la fila de eventos).
 * ¿En qué ticks se presiona una tecla? (Número `2`).
 
 Dejen correr la simulación hasta el tick 10 y comparen.
 
-**Qué deben observar:**
+**¿Qué deben observar?**
 * `vControlTask` tiene la mayor prioridad de la aplicación (3), así que en sus ticks de activación no debe aparecer `░░`.
 * `vKeyHandlerTask` sí muestra `░░` cuando una pulsación debe esperar su turno. En el tick 7 llegan dos pulsaciones seguidas: la segunda espera hasta que termine la primera.
 
