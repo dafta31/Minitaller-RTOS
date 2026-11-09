@@ -378,8 +378,10 @@ El programa dibujará el cronograma en pantalla en tiempo real (un tick por segu
 
 cronograma muestra tres símbolos por tarea en cada tick (cada segundo):
 
-██: la tarea está usando el procesador.
-░░: la tarea quiere usar el procesador, pero otra tarea lo tiene. Está esperando su turno.
+`██`: la tarea está usando el procesador.
+
+`░░`: la tarea quiere usar el procesador, pero otra tarea lo tiene. Está esperando su turno.
+
 Espacio vacío: la tarea no tiene nada que hacer en ese momento.
 
 **Antes de dejarlo correr:**
