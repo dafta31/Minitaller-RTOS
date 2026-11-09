@@ -376,9 +376,15 @@ Ejecuten el programa generado:
 
 El programa dibujará el cronograma en pantalla en tiempo real (un tick por segundo). Para detenerlo en cualquier momento, presionen `Ctrl+C`.
 
+cronograma muestra tres símbolos por tarea en cada tick (cada segundo):
+
+██: la tarea está usando el procesador.
+░░: la tarea quiere usar el procesador, pero otra tarea lo tiene. Está esperando su turno.
+Espacio vacío: la tarea no tiene nada que hacer en ese momento.
+
 **Antes de dejarlo correr:**
 * ¿En qué ticks debería activarse `vControlTask`? (Número `1` en la fila de eventos).
-* ¿En qué ticks se presiona una tecla? (Número `2`).
+* ¿En qué ticks se presiona una tecla? (Número `2` en la fila de eventos).
 
 Dejen correr la simulación hasta el tick 10 y comparen.
 
