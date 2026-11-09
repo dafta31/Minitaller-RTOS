@@ -46,27 +46,11 @@ Para la demostración se necesita además:
 
 ## 4. ¿Cómo usar los materiales?
 
-1. Descarguen o clonen este repositorio.
-2. Abran el tutorial guiado y sigan los pasos en orden. Cada paso que compila muestra el comando completo de `gcc`.
-3. Para la demostración, use la práctica del presentador. Antes de la clase, conviene seguirla una vez completa.
+1. Abran el tutorial guiado y sigan los pasos en orden. Cada paso que compila muestra el comando completo de `gcc`.
 
 ---
 
-## 5. Estado de verificación
-
-Lo que está revisado:
-
-- La configuración del demo Posix_GCC: el bloque de selección de demo y la salida del demo BlinkyDemo.
-- Los comandos de descarga y ejecución del Arduino IDE desde la terminal.
-
-Lo que **no** está verificado y debe revisarse antes de la clase:
-
-- El tutorial guiado no se ha compilado contra el kernel real de FreeRTOS. Conviene seguirlo completo una vez en una computadora limpia.
-- La práctica de Arduino depende de la versión de la biblioteca de FreeRTOS para Arduino y del IDE, así que los nombres y mensajes pueden cambiar.
-
----
-
-## 6. Referencias
+## 5. Referencias
 
 - Documentación oficial de FreeRTOS: [freertos.org](https://www.freertos.org)
 - Repositorio del kernel: [github.com/FreeRTOS/FreeRTOS-Kernel](https://github.com/FreeRTOS/FreeRTOS-Kernel)
