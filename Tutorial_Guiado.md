@@ -10,7 +10,7 @@
 
 En los **Sistemas Operativos de Tiempo Real (RTOS)** como FreeRTOS™, la gestión eficiente del procesador es fundamental para garantizar que las tareas críticas respondan dentro de sus plazos temporales (*deadlines*). A diferencia de los sistemas operativos de propósito general (GPOS), FreeRTOS emplea un planificador preventivo por prioridades fijas (*Fixed-Priority Preemptive Scheduler*).
 
-Este tutorial guiado permite a los estudiantes de ingeniería experimentar de forma práctica con el Kernel de FreeRTOS en un entorno emulado en Linux utilizando el **puerto POSIX**. A través de la construcción y modificación de una aplicación con múltiples tareas (`vControlTask`, `vKeyHandlerTask`, `vLogTask` e `IdleTask`), los estudiantes podrán observar directamente cómo la alteración de parámetros clave como la **prioridad**, la **duración de cómputo** y el **periodo de activación** impacta la asignación de CPU y el comportamiento del sistema.
+Este tutorial guiado permitirá experimentar de forma práctica con el Kernel de FreeRTOS en un entorno emulado en Linux utilizando el **puerto POSIX**. A través de la construcción y modificación de una aplicación con múltiples tareas (`vControlTask`, `vKeyHandlerTask`, `vLogTask` e `IdleTask`), los estudiantes podrán observar directamente cómo la alteración de parámetros clave como la **prioridad**, la **duración de cómputo** y el **periodo de activación** impacta la asignación de CPU y el comportamiento del sistema.
 
 ---
 
