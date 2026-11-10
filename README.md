@@ -17,9 +17,13 @@ El repositorio contiene dos materiales en Markdown:
 
 ```
 Minitaller-RTOS/
-├── README.md                   Esta guía
-├── Tutorial_Guiado.md          Tutorial guiado para estudiantes
-└── Demostracion_practica.md    Demostración del presentador
+├── Demo/                    Demostración práctica del presentador
+├── Evaluación Diagnóstica/  Material de la evaluación diagnóstica
+├── Presentación/            Diapositivas del minitaller
+├── Resumen ejecutivo/       Resumen ejecutivo del minitaller
+├── Tutorial/                Tutorial guiado para estudiantes
+├── .gitignore               Archivos excluidos del control de versiones
+└── README.md                Esta guía
 ```
 
 El repositorio no contiene código compilado ni archivos del kernel. Los estudiantes obtienen el kernel desde GitHub durante el tutorial.
