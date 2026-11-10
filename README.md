@@ -8,8 +8,8 @@ Minitaller para estudiantes de Ingeniería en Electrónica (ITCR). Enseña cómo
 
 El repositorio contiene dos materiales en Markdown:
 
-- **Tutorial guiado (`Tutorial_Guiado.md`):** los estudiantes descargan el kernel de FreeRTOS, escriben dos archivos (`config/FreeRTOSConfig.h` y `src/main.c`), compilan con un solo comando de `gcc` y cambian prioridad, duración y periodo de las tareas para observar el cronograma.
-- **Práctica de demostración (`Demostracion_practica.md`):** demostración de 15 a 20 minutos, a cargo del presentador. Ejecuta el demo BlinkyDemo del simulador POSIX de FreeRTOS y, al final, carga la tarea de parpadeo en un Arduino Mega 2560. **No se requiere clonar el actual repositorio para la realización del tutorial guiado.**
+- **Tutorial guiado (`Tutorial Guiado/Tutorial_Guiado.md`):** los estudiantes descargan el kernel de FreeRTOS, escriben dos archivos (`config/FreeRTOSConfig.h` y `src/main.c`), compilan con un solo comando de `gcc` y cambian prioridad, duración y periodo de las tareas para observar el cronograma. **No se requiere clonar el actual repositorio para la realización del tutorial guiado.**
+- **Práctica de demostración (`Demo/Demostracion_practica.md`):** demostración de 15 a 20 minutos, a cargo del presentador. Ejecuta el demo BlinkyDemo del simulador POSIX de FreeRTOS y, al final, carga la tarea de parpadeo en un Arduino Mega 2560. 
 
 ---
 
