@@ -2,13 +2,12 @@
 **Duración:**  15 a 20 minutos  **¿Qué se va a realizar?:**  descargar el repositorio oficial de FreeRTOS con sus submódulos, compilar el demo del simulador POSIX y ejecutar el demo  **BLINKY_DEMO** . Finalmente, se carga un script de FreeRTOS en el arduino que parpadea un LED.
 
 --------------------------------------------------------------------------------
-
 #### Paso 1: Instalar las herramientas
 ```bash
 sudo apt-get update
-sudo apt-get install -y build-essential git nano
-
+sudo apt-get install -y build-essential git nano wget libfuse2
 ```
+
 **Verificación:**  los paquetes se instalan sin errores.
 
 --------------------------------------------------------------------------------
